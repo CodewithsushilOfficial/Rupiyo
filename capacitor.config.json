@@ -1,0 +1,14 @@
+{
+  "appId": "com.rupiyo.app",
+  "appName": "Rupiyo",
+  "webDir": "out",
+  "bundledWebRuntime": false,
+  "plugins": {
+    "Camera": {
+      "permissions": ["camera", "photos"]
+    }
+  },
+  "server": {
+    "androidScheme": "https"
+  }
+}

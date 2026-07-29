@@ -1,0 +1,301 @@
+@import "tailwindcss";
+
+@theme {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-heading: var(--heading);
+
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-card-hover: var(--card-hover);
+
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-active: var(--primary-active);
+  --color-primary-light: var(--primary-light);
+  --color-primary-soft: var(--primary-soft);
+  --color-primary-ultra-soft: var(--primary-ultra-soft);
+  --color-primary-border: var(--primary-border);
+
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-tertiary: var(--tertiary);
+
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-subtle: var(--subtle);
+
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+
+  --color-border: var(--border);
+  --color-border-subtle: var(--border-subtle);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-divider: var(--divider);
+
+  --color-income: var(--income);
+  --color-income-strong: var(--income-strong);
+  --color-income-foreground: var(--income-foreground);
+  --color-income-soft: var(--income-soft);
+  --color-income-border: var(--income-border);
+
+  --color-expense: var(--expense);
+  --color-expense-strong: var(--expense-strong);
+  --color-expense-foreground: var(--expense-foreground);
+  --color-expense-soft: var(--expense-soft);
+  --color-expense-border: var(--expense-border);
+
+  --color-savings: var(--savings);
+  --color-savings-strong: var(--savings-strong);
+  --color-savings-foreground: var(--savings-foreground);
+  --color-savings-soft: var(--savings-soft);
+  --color-savings-border: var(--savings-border);
+
+  --color-warning: var(--warning);
+  --color-warning-strong: var(--warning-strong);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-warning-soft: var(--warning-soft);
+  --color-warning-border: var(--warning-border);
+
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-chart-6: var(--chart-6);
+
+  --radius-card: 16px;
+  --radius-control: 10px;
+  --radius-sm: 8px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-dialog: 18px;
+
+  --shadow-card: 0 1px 2px rgba(20,20,40,0.02), 0 4px 14px rgba(20,20,40,0.035);
+  --shadow-card-hover: 0 8px 24px rgba(20,20,40,0.07);
+  --shadow-dropdown: 0 12px 32px rgba(23,23,37,0.12);
+  --shadow-dialog: 0 24px 64px rgba(17,17,29,0.18);
+  --shadow-primary-btn: 0 4px 12px rgba(103,89,232,0.22);
+}
+
+:root {
+  /* ============================================ */
+  /* RUPIYO APPROVED LIGHT THEME                  */
+  /* ============================================ */
+
+  /* Brand */
+  --primary: #6759E8;
+  --primary-foreground: #FFFFFF;
+  --primary-hover: #594BD7;
+  --primary-active: #4C3FC5;
+  --primary-light: #9B91F5;
+  --primary-soft: #EEECFF;
+  --primary-ultra-soft: #F6F5FF;
+  --primary-border: #D9D5FA;
+
+  /* Surfaces */
+  --background: #F7F8FC;
+  --foreground: #252538;
+  --heading: #171725;
+
+  --card: #FFFFFF;
+  --card-foreground: #252538;
+  --card-hover: #FCFCFF;
+
+  --popover: #FFFFFF;
+  --popover-foreground: #252538;
+
+  --secondary: #F4F5F9;
+  --secondary-foreground: #454557;
+  --tertiary: #EEF0F5;
+
+  --muted: #F4F5F9;
+  --muted-foreground: #626276;
+  --subtle: #9292A3;
+
+  --accent: #EEECFF;
+  --accent-foreground: #6759E8;
+
+  /* Borders & Inputs */
+  --border: #E8E8F0;
+  --border-subtle: #EFF0F5;
+  --input: #E4E5EC;
+  --ring: #6759E8;
+  --divider: #EEEEF3;
+
+  /* Financial Indicators */
+  --income: #22B573;
+  --income-strong: #169B5E;
+  --income-foreground: #FFFFFF;
+  --income-soft: #EAF9F1;
+  --income-border: #C8EFDA;
+
+  --expense: #F05B78;
+  --expense-strong: #DF4765;
+  --expense-foreground: #FFFFFF;
+  --expense-soft: #FFF0F3;
+  --expense-border: #FFD5DE;
+
+  --savings: #548AF7;
+  --savings-strong: #3975EA;
+  --savings-foreground: #FFFFFF;
+  --savings-soft: #EDF4FF;
+  --savings-border: #D5E4FF;
+
+  --warning: #F5A524;
+  --warning-strong: #E38C0B;
+  --warning-foreground: #FFFFFF;
+  --warning-soft: #FFF7E8;
+  --warning-border: #FFE4B5;
+
+  /* Sidebar */
+  --sidebar: #FFFFFF;
+  --sidebar-foreground: #626276;
+  --sidebar-primary: #6759E8;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #EEECFF;
+  --sidebar-accent-foreground: #6759E8;
+  --sidebar-border: #EFF0F5;
+
+  /* Charts */
+  --chart-1: #6759E8;
+  --chart-2: #548AF7;
+  --chart-3: #35C486;
+  --chart-4: #F06B86;
+  --chart-5: #F59E42;
+  --chart-6: #9B7BF5;
+
+  --radius: 0.625rem;
+}
+
+.dark {
+  /* ============================================ */
+  /* RUPIYO APPROVED DARK THEME                   */
+  /* ============================================ */
+
+  /* Brand */
+  --primary: #7668F2;
+  --primary-foreground: #FFFFFF;
+  --primary-hover: #6759E8;
+  --primary-active: #594BD7;
+  --primary-light: #9B91F5;
+  --primary-soft: #1F1D3D;
+  --primary-ultra-soft: #18172F;
+  --primary-border: #312A66;
+
+  /* Surfaces */
+  --background: #0D0E15;
+  --foreground: #E2E4ED;
+  --heading: #FFFFFF;
+
+  --card: #141622;
+  --card-foreground: #E2E4ED;
+  --card-hover: #1A1C2B;
+
+  --popover: #141622;
+  --popover-foreground: #E2E4ED;
+
+  --secondary: #1B1D2C;
+  --secondary-foreground: #E2E4ED;
+  --tertiary: #222538;
+
+  --muted: #1B1D2C;
+  --muted-foreground: #9597A6;
+  --subtle: #6F7285;
+
+  --accent: #1F1D3D;
+  --accent-foreground: #7668F2;
+
+  /* Borders & Inputs */
+  --border: #26293C;
+  --border-subtle: #1E2030;
+  --input: #2D3046;
+  --ring: #7668F2;
+  --divider: #202334;
+
+  /* Financial Indicators */
+  --income: #2ED48B;
+  --income-strong: #25B877;
+  --income-foreground: #FFFFFF;
+  --income-soft: #112C20;
+  --income-border: #194A34;
+
+  --expense: #F8718B;
+  --expense-strong: #E6506D;
+  --expense-foreground: #FFFFFF;
+  --expense-soft: #30161D;
+  --expense-border: #4D1B28;
+
+  --savings: #60A5FA;
+  --savings-strong: #3B82F6;
+  --savings-foreground: #FFFFFF;
+  --savings-soft: #122540;
+  --savings-border: #1A3B66;
+
+  --warning: #FBBF24;
+  --warning-strong: #F59E0B;
+  --warning-foreground: #111827;
+  --warning-soft: #332508;
+  --warning-border: #523A0A;
+
+  /* Sidebar */
+  --sidebar: #11131E;
+  --sidebar-foreground: #9597A6;
+  --sidebar-primary: #7668F2;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #1F1D3D;
+  --sidebar-accent-foreground: #7668F2;
+  --sidebar-border: #1E2030;
+
+  /* Charts */
+  --chart-1: #7668F2;
+  --chart-2: #60A5FA;
+  --chart-3: #2ED48B;
+  --chart-4: #F8718B;
+  --chart-5: #FBBF24;
+  --chart-6: #A78BFA;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-feature-settings: "rlig" 1, "calt" 1;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--muted-foreground);
+}
+
+/* Selection Color */
+::selection {
+  background-color: var(--primary-soft);
+  color: var(--primary);
+}
