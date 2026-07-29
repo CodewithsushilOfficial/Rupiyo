@@ -46,7 +46,11 @@ const CustomTooltip = ({ active, payload, label }) => {
   return null;
 };
 
+import { useIsClient } from '@/lib/hooks/useIsClient';
+
 export function MonthlyTrendCard({ trendData = [] }) {
+  const mounted = useIsClient();
+
   return (
     <div className="rounded-card bg-card text-card-foreground border border-border shadow-card h-full">
       {/* Header */}
@@ -75,9 +79,9 @@ export function MonthlyTrendCard({ trendData = [] }) {
 
         {/* Chart */}
         <div className="h-60 w-full">
-          {trendData.length === 0 ? (
+          {!mounted || trendData.length === 0 ? (
             <div className="flex items-center justify-center h-full text-[13px] text-muted-foreground">
-              No trend data available.
+              {mounted ? 'No trend data available.' : 'Loading chart...'}
             </div>
           ) : (
             <ResponsiveContainer width="100%" height="100%">

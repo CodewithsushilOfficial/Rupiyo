@@ -5,6 +5,7 @@ import { ResponsiveContainer, AreaChart, Area } from 'recharts';
 import { formatCurrency } from '@/lib/utils/formatters';
 import { ArrowUp, ArrowDown } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
+import { useIsClient } from '@/lib/hooks/useIsClient';
 
 const THEME_CLASSES = {
   balance: {
@@ -38,6 +39,7 @@ export function SummaryCard({
   sparkData = [],
   colorTheme = 'balance',
 }) {
+  const mounted = useIsClient();
   const t = THEME_CLASSES[colorTheme] || THEME_CLASSES.balance;
 
   return (
@@ -73,7 +75,7 @@ export function SummaryCard({
 
       {/* Sparkline */}
       <div className="h-12.5 w-full px-1">
-        {sparkData.length > 1 ? (
+        {mounted && sparkData.length > 1 ? (
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart data={sparkData} margin={{ top: 4, right: 0, left: 0, bottom: 0 }}>
               <defs>

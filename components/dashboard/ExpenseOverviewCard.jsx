@@ -24,7 +24,11 @@ const CustomTooltip = ({ active, payload }) => {
  * Expense Overview card with donut chart + category legend.
  * ALL data from props.expenseOverview — zero hardcoded values.
  */
+import { useIsClient } from '@/lib/hooks/useIsClient';
+
 export function ExpenseOverviewCard({ expenseOverview = {} }) {
+  const mounted = useIsClient();
+
   const { total = 0, changePercent = 0, categories = [] } = expenseOverview;
 
   const chartData = categories.map((cat) => ({
@@ -83,26 +87,30 @@ export function ExpenseOverviewCard({ expenseOverview = {} }) {
             <div className="grid grid-cols-12 items-center gap-4 mt-4">
               {/* Donut */}
               <div className="relative col-span-5 flex items-center justify-center h-50">
-                <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
-                    <Pie
-                      data={chartData}
-                      cx="50%"
-                      cy="50%"
-                      innerRadius={60}
-                      outerRadius={88}
-                      paddingAngle={3}
-                      dataKey="value"
-                      cornerRadius={4}
-                      stroke="none"
-                    >
-                      {chartData.map((entry, i) => (
-                        <Cell key={i} fill={entry.color} />
-                      ))}
-                    </Pie>
-                    <Tooltip content={<CustomTooltip />} />
-                  </PieChart>
-                </ResponsiveContainer>
+                {mounted ? (
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <Pie
+                        data={chartData}
+                        cx="50%"
+                        cy="50%"
+                        innerRadius={60}
+                        outerRadius={88}
+                        paddingAngle={3}
+                        dataKey="value"
+                        cornerRadius={4}
+                        stroke="none"
+                      >
+                        {chartData.map((entry, i) => (
+                          <Cell key={i} fill={entry.color} />
+                        ))}
+                      </Pie>
+                      <Tooltip content={<CustomTooltip />} />
+                    </PieChart>
+                  </ResponsiveContainer>
+                ) : (
+                  <div className="h-full w-full rounded-full border-4 border-dashed border-border" />
+                )}
                 {/* Center label */}
                 <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
                   <span className="text-[18px] font-bold text-heading">

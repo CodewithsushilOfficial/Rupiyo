@@ -18,11 +18,15 @@ function CustomPieTooltip({ active, payload }) {
   return null;
 }
 
+import { useIsClient } from '@/lib/hooks/useIsClient';
+
 export function CategoryPieChart({ data = [] }) {
-  if (data.length === 0) {
+  const mounted = useIsClient();
+
+  if (!mounted || data.length === 0) {
     return (
       <div className="flex h-72 items-center justify-center text-xs text-muted-foreground">
-        No expense data recorded in this timeframe
+        {mounted ? 'No expense data recorded in this timeframe' : 'Loading chart...'}
       </div>
     );
   }

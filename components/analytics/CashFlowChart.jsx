@@ -35,24 +35,34 @@ function CustomTooltip({ active, payload, label }) {
   return null;
 }
 
+import { useIsClient } from '@/lib/hooks/useIsClient';
+
 export function CashFlowChart({ data = [] }) {
+  const mounted = useIsClient();
+
   return (
     <div className="h-72 w-full">
-      <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border-subtle)" />
-          <XAxis dataKey="month" tickLine={false} tick={{ fontSize: 12, fill: 'var(--muted-foreground)' }} />
-          <YAxis
-            tickLine={false}
-            tick={{ fontSize: 12, fill: 'var(--muted-foreground)' }}
-            tickFormatter={(value) => `₹${value >= 1000 ? `${(value / 1000).toFixed(0)}k` : value}`}
-          />
-          <Tooltip content={<CustomTooltip />} />
-          <Legend wrapperStyle={{ paddingTop: '10px', fontSize: '12px' }} />
-          <Bar dataKey="income" name="Income" fill="var(--income)" radius={[4, 4, 0, 0]} />
-          <Bar dataKey="expense" name="Expense" fill="var(--expense)" radius={[4, 4, 0, 0]} />
-        </BarChart>
-      </ResponsiveContainer>
+      {!mounted ? (
+        <div className="flex h-full items-center justify-center text-xs text-muted-foreground">
+          Loading chart...
+        </div>
+      ) : (
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border-subtle)" />
+            <XAxis dataKey="month" tickLine={false} tick={{ fontSize: 12, fill: 'var(--muted-foreground)' }} />
+            <YAxis
+              tickLine={false}
+              tick={{ fontSize: 12, fill: 'var(--muted-foreground)' }}
+              tickFormatter={(value) => `₹${value >= 1000 ? `${(value / 1000).toFixed(0)}k` : value}`}
+            />
+            <Tooltip content={<CustomTooltip />} />
+            <Legend wrapperStyle={{ paddingTop: '10px', fontSize: '12px' }} />
+            <Bar dataKey="income" name="Income" fill="var(--income)" radius={[4, 4, 0, 0]} />
+            <Bar dataKey="expense" name="Expense" fill="var(--expense)" radius={[4, 4, 0, 0]} />
+          </BarChart>
+        </ResponsiveContainer>
+      )}
     </div>
   );
 }

@@ -10,7 +10,11 @@ import { ArrowUpRight, ArrowDownRight } from 'lucide-react';
  * KPI Summary Card with Recharts sparkline.
  * colorTheme: 'balance' | 'income' | 'expense' | 'savings'
  */
+import { useIsClient } from '@/lib/hooks/useIsClient';
+
 export function KpiCard({ title, amount, percentage, isPositive, icon: Icon, colorTheme }) {
+  const mounted = useIsClient();
+
   const themeMap = {
     balance: {
       iconBg: '#EEECFF', iconColor: '#6759E8',
@@ -81,24 +85,28 @@ export function KpiCard({ title, amount, percentage, isPositive, icon: Icon, col
 
         {/* Sparkline */}
         <div className="mt-5 h-10 w-full">
-          <ResponsiveContainer width="100%" height="100%">
-            <AreaChart data={sparklineData} margin={{ top: 0, right: 0, left: 0, bottom: 0 }}>
-              <defs>
-                <linearGradient id={`kpi-grad-${colorTheme}`} x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor={t.stroke} stopOpacity={t.fillOpacity} />
-                  <stop offset="100%" stopColor={t.stroke} stopOpacity={0.0} />
-                </linearGradient>
-              </defs>
-              <Area
-                type="monotone"
-                dataKey="v"
-                stroke={t.stroke}
-                strokeWidth={2.5}
-                fill={`url(#kpi-grad-${colorTheme})`}
-                isAnimationActive={false}
-              />
-            </AreaChart>
-          </ResponsiveContainer>
+          {mounted ? (
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={sparklineData} margin={{ top: 0, right: 0, left: 0, bottom: 0 }}>
+                <defs>
+                  <linearGradient id={`kpi-grad-${colorTheme}`} x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor={t.stroke} stopOpacity={t.fillOpacity} />
+                    <stop offset="100%" stopColor={t.stroke} stopOpacity={0.0} />
+                  </linearGradient>
+                </defs>
+                <Area
+                  type="monotone"
+                  dataKey="v"
+                  stroke={t.stroke}
+                  strokeWidth={2.5}
+                  fill={`url(#kpi-grad-${colorTheme})`}
+                  isAnimationActive={false}
+                />
+              </AreaChart>
+            </ResponsiveContainer>
+          ) : (
+            <div className="h-full w-full bg-slate-50 dark:bg-slate-900 rounded" />
+          )}
         </div>
       </div>
     </div>
