@@ -15,6 +15,27 @@ const geistMono = Geist_Mono({
 export const metadata = {
   title: "Rupiyo — Personal Finance & Expense Tracker",
   description: "Enterprise-grade personal finance, budget tracking, and intelligent spending insights platform.",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Rupiyo",
+  },
+  icons: {
+    icon: [
+      { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
+      { url: "/icon-512.png", sizes: "512x512", type: "image/png" },
+    ],
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
+  },
+};
+
+export const viewport = {
+  themeColor: "#6759E8",
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  viewportFit: "cover",
 };
 
 export default function RootLayout({ children }) {

@@ -1,24 +1,31 @@
 export default function manifest() {
   return {
-    name: 'Rupiyo — Expense Tracker',
+    name: 'Rupiyo — Personal Finance',
     short_name: 'Rupiyo',
-    description: 'Advanced Expense Tracker & Personal Finance Web App',
-    start_url: '/dashboard',
+    description: 'Smart Expense Tracker & Personal Finance App',
+    start_url: '/',
     display: 'standalone',
-    background_color: '#F7F8FC',
+    orientation: 'portrait',
+    background_color: '#FFFFFF',
     theme_color: '#6759E8',
     icons: [
       {
         src: '/icon-192.png',
         sizes: '192x192',
         type: 'image/png',
-        purpose: 'any maskable',
+        purpose: 'any',
       },
       {
         src: '/icon-512.png',
         sizes: '512x512',
         type: 'image/png',
-        purpose: 'any maskable',
+        purpose: 'any',
+      },
+      {
+        src: '/maskable-icon-512.png',
+        sizes: '512x512',
+        type: 'image/png',
+        purpose: 'maskable',
       },
     ],
     share_target: {
