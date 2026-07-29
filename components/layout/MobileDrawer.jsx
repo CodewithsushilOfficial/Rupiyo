@@ -29,25 +29,46 @@ import { cn } from '@/lib/utils/cn';
 import { ApkDownloadModal } from '@/components/common/ApkDownloadModal';
 
 const emptySubscribe = () => () => {};
+const SERVER_PLATFORM_SNAPSHOT = Object.freeze({ isStandalone: false, isIOS: false, isAndroid: false });
+
+let cachedClientSnapshot = null;
+let lastUa = null;
+let lastStandalone = null;
+
+function getClientPlatformSnapshot() {
+  if (typeof window === 'undefined') return SERVER_PLATFORM_SNAPSHOT;
+
+  const ua = navigator.userAgent || '';
+  const isStandalone = Boolean(
+    window.matchMedia('(display-mode: standalone)').matches ||
+      window.navigator.standalone ||
+      document.referrer.includes('android-app://')
+  );
+
+  if (
+    cachedClientSnapshot &&
+    lastUa === ua &&
+    lastStandalone === isStandalone
+  ) {
+    return cachedClientSnapshot;
+  }
+
+  lastUa = ua;
+  lastStandalone = isStandalone;
+  cachedClientSnapshot = Object.freeze({
+    isStandalone,
+    isIOS: /iPhone|iPad|iPod/i.test(ua),
+    isAndroid: /Android/i.test(ua),
+  });
+
+  return cachedClientSnapshot;
+}
 
 function useClientPlatform() {
   return React.useSyncExternalStore(
     emptySubscribe,
-    () => {
-      const ua = typeof navigator !== 'undefined' ? navigator.userAgent || '' : '';
-      const isStandalone =
-        typeof window !== 'undefined' &&
-        (window.matchMedia('(display-mode: standalone)').matches ||
-          window.navigator.standalone ||
-          document.referrer.includes('android-app://'));
-
-      return {
-        isStandalone: Boolean(isStandalone),
-        isIOS: /iPhone|iPad|iPod/i.test(ua),
-        isAndroid: /Android/i.test(ua),
-      };
-    },
-    () => ({ isStandalone: false, isIOS: false, isAndroid: false })
+    getClientPlatformSnapshot,
+    () => SERVER_PLATFORM_SNAPSHOT
   );
 }
 
