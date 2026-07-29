@@ -1,7 +1,7 @@
 {
   "appId": "com.rupiyo.app",
   "appName": "Rupiyo",
-  "webDir": "out",
+  "webDir": "public",
   "bundledWebRuntime": false,
   "plugins": {
     "Camera": {

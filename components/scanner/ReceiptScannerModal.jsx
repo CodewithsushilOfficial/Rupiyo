@@ -3,19 +3,21 @@
 import * as React from 'react';
 import { Modal } from '@/components/ui/Modal';
 import { Button } from '@/components/ui/Button';
-import { Camera as CameraIcon, Upload, FileText, RefreshCw } from 'lucide-react';
+import { Camera as CameraIcon, Upload, FileText, RefreshCw, XCircle } from 'lucide-react';
 import { Capacitor } from '@capacitor/core';
+import { preprocessImageClient } from '@/lib/services/image-preprocessing';
 
 export function ReceiptScannerModal({ isOpen, onClose, onScanComplete }) {
   const [isScanning, setIsScanning] = React.useState(false);
+  const [scanStage, setScanStage] = React.useState(''); // 'reading' | 'scanning' | 'extracting'
   const [errorMsg, setErrorMsg] = React.useState('');
   const [activeTab, setActiveTab] = React.useState('upload'); // 'camera' | 'upload' | 'text'
   const [manualText, setManualText] = React.useState('');
   const fileInputRef = React.useRef(null);
   const videoRef = React.useRef(null);
   const mediaStreamRef = React.useRef(null);
+  const abortControllerRef = React.useRef(null);
 
-  // Clean up camera stream track on unmount or tab change
   const stopCameraStream = React.useCallback(() => {
     if (mediaStreamRef.current) {
       mediaStreamRef.current.getTracks().forEach((track) => track.stop());
@@ -26,11 +28,19 @@ export function ReceiptScannerModal({ isOpen, onClose, onScanComplete }) {
   React.useEffect(() => {
     return () => {
       stopCameraStream();
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
     };
   }, [stopCameraStream]);
 
   const handleClose = () => {
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
     stopCameraStream();
+    setIsScanning(false);
+    setErrorMsg('');
     onClose();
   };
 
@@ -54,7 +64,6 @@ export function ReceiptScannerModal({ isOpen, onClose, onScanComplete }) {
         return;
       }
 
-      // Web getUserMedia fallback
       const stream = await navigator.mediaDevices.getUserMedia({
         video: { facingMode: 'environment' },
       });
@@ -95,14 +104,25 @@ export function ReceiptScannerModal({ isOpen, onClose, onScanComplete }) {
   const processFilePayload = async (fileOrBlob, filename) => {
     setIsScanning(true);
     setErrorMsg('');
+    setScanStage('Reading image...');
+
+    abortControllerRef.current = new AbortController();
 
     try {
+      // 1. Preprocess image client-side for ultra-fast performance
+      setScanStage('Scanning receipt...');
+      const processedBlob = await preprocessImageClient(fileOrBlob);
+
+      // 2. Build payload
+      setScanStage('Extracting transaction details...');
       const formData = new FormData();
-      formData.append('file', fileOrBlob, filename);
+      formData.append('file', processedBlob, filename || 'receipt.jpg');
+      formData.append('source', 'CAMERA_SCAN');
 
       const res = await fetch('/api/ocr/parse', {
         method: 'POST',
         body: formData,
+        signal: abortControllerRef.current.signal,
       });
 
       const json = await res.json();
@@ -113,10 +133,15 @@ export function ReceiptScannerModal({ isOpen, onClose, onScanComplete }) {
       onScanComplete(json.data);
       handleClose();
     } catch (err) {
+      if (err.name === 'AbortError') {
+        console.log('[SCAN_CANCELLED] Scan operation was cancelled by user');
+        return;
+      }
       console.error('[SCAN_PROCESS_ERROR]:', err);
       setErrorMsg(err.message || 'We could not read this receipt. Try entering details manually.');
     } finally {
       setIsScanning(false);
+      setScanStage('');
     }
   };
 
@@ -126,10 +151,12 @@ export function ReceiptScannerModal({ isOpen, onClose, onScanComplete }) {
 
     setIsScanning(true);
     setErrorMsg('');
+    setScanStage('Parsing text...');
 
     try {
       const formData = new FormData();
       formData.append('text', manualText);
+      formData.append('source', 'TEXT_SHARE');
 
       const res = await fetch('/api/ocr/parse', {
         method: 'POST',
@@ -147,6 +174,7 @@ export function ReceiptScannerModal({ isOpen, onClose, onScanComplete }) {
       setErrorMsg(err.message || 'Failed to parse text transaction');
     } finally {
       setIsScanning(false);
+      setScanStage('');
     }
   };
 
@@ -158,8 +186,11 @@ export function ReceiptScannerModal({ isOpen, onClose, onScanComplete }) {
       description="Upload an image, PDF receipt, or take a photo to extract transaction details."
     >
       {errorMsg && (
-        <div className="mb-4 rounded-control border border-expense-border bg-expense-soft p-3 text-xs font-semibold text-expense">
-          {errorMsg}
+        <div className="mb-4 rounded-control border border-expense-border bg-expense-soft p-3 text-xs font-semibold text-expense flex items-center justify-between">
+          <span>{errorMsg}</span>
+          <button type="button" onClick={() => setErrorMsg('')} className="ml-2 font-bold text-expense">
+            ✕
+          </button>
         </div>
       )}
 
@@ -201,12 +232,17 @@ export function ReceiptScannerModal({ isOpen, onClose, onScanComplete }) {
       </div>
 
       {isScanning ? (
-        <div className="flex flex-col items-center justify-center py-12 text-center">
-          <RefreshCw className="h-8 w-8 animate-spin text-primary mb-3" />
-          <h4 className="text-base font-semibold text-heading">Reading document...</h4>
-          <p className="text-xs text-muted-foreground mt-1">
-            Extracting amount, merchant name, date, and payment method securely.
-          </p>
+        <div className="flex flex-col items-center justify-center py-12 text-center space-y-3">
+          <RefreshCw className="h-9 w-9 animate-spin text-primary" />
+          <div>
+            <h4 className="text-base font-bold text-heading">{scanStage || 'Processing...'}</h4>
+            <p className="text-xs text-muted-foreground mt-1">
+              Extracting amount, merchant name, date, and payment method securely.
+            </p>
+          </div>
+          <Button variant="outline" size="sm" onClick={handleClose} className="mt-2 text-xs gap-1.5">
+            <XCircle className="h-3.5 w-3.5" /> Cancel Scanning
+          </Button>
         </div>
       ) : (
         <>
