@@ -2,6 +2,7 @@ import { getDashboardSummaryAction } from '@/lib/actions/dashboard-actions';
 import { DashboardView } from '@/components/dashboard/DashboardView';
 import { DashboardError } from '@/components/dashboard/DashboardError';
 import { createClient } from '@/lib/supabase/server';
+import { redirect } from 'next/navigation';
 
 export const dynamic = 'force-dynamic';
 
@@ -12,6 +13,13 @@ export const metadata = {
 
 export default async function DashboardPage() {
   const result = await getDashboardSummaryAction();
+
+  if (!result.success) {
+    if (result.error === 'Unauthorized') {
+      redirect('/login?redirect=/dashboard');
+    }
+    return <DashboardError message={result.error} />;
+  }
 
   let userData = null;
   try {
@@ -33,12 +41,12 @@ export default async function DashboardPage() {
       };
     }
   } catch (err) {
+    if (err?.digest?.startsWith('NEXT_REDIRECT')) {
+      throw err;
+    }
     console.error('[DASHBOARD_PAGE_USER_ERR]:', err);
-  }
-
-  if (!result.success) {
-    return <DashboardError message={result.error} />;
   }
 
   return <DashboardView dashboardData={result.data || {}} user={userData || {}} />;
 }
+
